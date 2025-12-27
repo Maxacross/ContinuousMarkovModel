@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модель марковського ланцюга</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- MathJax SVG renderer -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            options: {
+                skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"></script>
+
+    <!-- Math.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+    <!-- Viz.js -->
+    <script src="https://unpkg.com/viz.js@2.1.2/viz.js"></script>
+    <script src="https://unpkg.com/viz.js@2.1.2/full.render.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <h2>Моделювання безперервної марковської моделі</h2>
+
+    <section class="info-block">
+        <p>
+            Веб-застосунок
+            <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                «Модель безперервного марковського ланцюга»
+            </a>
+            призначений для дослідження динаміки марковських процесів
+            на основі матриці інтенсивностей та початкового розподілу ймовірностей.
+        </p>
+
+        <h4>Можливості програми</h4>
+        <ul>
+            <li>редагування матриці інтенсивностей переходів</li>
+            <li>задання вектора початкових ймовірностей</li>
+            <li>побудова графа марковського ланцюга</li>
+            <li>формування системи рівнянь Колмогорова</li>
+            <li>обчислення стаціонарних ймовірностей станів</li>
+            <li>побудова графіків динаміки ймовірностей у часі</li>
+            <li>збереження та завантаження моделі з файлу</li>
+        </ul>
+
+        <h4>Параметри моделі</h4>
+        <ul>
+            <li><strong>Розмір таблиці</strong> — кількість станів марковського ланцюга (від 2 до 100).</li>
+            <li><strong>Кількість кроків</strong> — число дискретних моментів часу для обчислення ймовірностей станів.</li>
+            <li><strong>Кінцевий момент часу T</strong> — максимальний час моделювання.</li>
+            <li><strong>Кількість значущих цифр</strong> — точність відображення числових результатів.</li>
+            <li><strong>Таблиця інтенсивностей</strong> — квадратна матриця, елементи якої задають інтенсивності переходів між станами. Позадіагональні елементи визначають швидкість переходу зі стану <em>i</em> у стан <em>j</em>, а діагональні елементи є від’ємними та дорівнюють мінус сумі позадіагональних елементів рядка.</li>
+            <li><strong>Вектор початкових ймовірностей</strong> — початковий розподіл ймовірностей по станах (сума має дорівнювати 1).</li>
+        </ul>
+
+        <h4>Результати роботи</h4>
+        <ul>
+            <li>матриця інтенсивностей</li>
+            <li>система лінійних рівнянь Колмогорова</li>
+            <li>розв’язок системи (стаціонарні ймовірності)</li>
+            <li>граф марковського ланцюга (SVG / PNG)</li>
+            <li>графік зміни ймовірностей станів у часі</li>
+        </ul>
+
+        <p>
+            Приклад моделі можна завантажити
+            <strong>
+                <a href="resources/example_model.json" download>тут</a>
+            </strong>
+        </p>
+    </section>
+
+    <hr>
+
+    <h3>Параметри моделі</h3>
+
+    <section>
+        <fieldset>
+            <legend>Налаштування</legend>
+
+            <label>
+                Розмір таблиці (2–100):
+                <input type="number" id="size" value="2" min="2" max="100" oninput="validateAndCreate()">
+            </label>
+
+            <label>
+                Кількість кроків (1–999):
+                <input type="number" id="steps" value="1" min="1" max="999" oninput="validateSteps()">
+            </label>
+
+            <label>
+                Кінцевий момент часу (T &gt; 0):
+                <input type="number" id="timeEnd" value="20" min="1" step="any" oninput="validateTimeEnd()">
+            </label>
+
+            <label>
+                Кількість значущих цифр (0–20):
+                <input type="range" id="precisionSlider" min="0" max="20" value="4" step="1" oninput="updatePrecisionValue(this.value)">
+                <span id="precisionValue">4</span>
+            </label>
+
+        </fieldset>
+
+        <button id="saveBtn">Зберегти модель</button>
+        <input type="file" id="loadFileInput" accept=".json">
+        <label for="loadFileInput" class="file-label">Завантажити модель</label>
+    </section>
+
+    <section>
+        <h4 id="tableContainerTitle">Таблиця інтенсивностей</h4>
+        <div id="tableContainer"></div>
+
+        <h4 id="initialVectorTitle">Вектор початкових ймовірностей p<sup>(0)</sup></h4>
+        <div id="initialVectorContainer"></div>
+
+        <button id="calculateBtn" onclick="calculateValues()">Обчислити</button>
+
+        <div id="modelWorkspace">
+            <section>
+                <h4 id="graphTitle" style="display:none;">Граф марковського ланцюга</h4>
+                <div id="graphContainer" style="display:none;"></div>
+
+                <div id="downloadControls" style="display:none;">
+                    <label>
+                        Формат файлу:
+                        <select id="graphFormat">
+                            <option value="svg">SVG</option>
+                            <option value="png">PNG</option>
+                        </select>
+                    </label>
+                    <button onclick="downloadGraph()">Завантажити граф</button>
+                </div>
+            </section>
+
+            <section>
+                <h4 id="matrixTitle" style="display:none;">Матриця інтенсивностей</h4>
+                <div id="intensityMatrix" style="display:none;"></div>
+
+                <h4 id="kolmogorovTitle" style="display:none;">Система рівнянь Колмогорова</h4>
+                <div id="systemakolmogorova" style="display:none;"></div>
+
+                <h4 id="solutionTitle" style="display:none;">Стаціонарні ймовірності станів</h4>
+                <div id="solutionContainer" style="display:none;"></div>
+
+                <h4 id="chartTitle" style="display:none;">Динаміка ймовірностей станів</h4>
+                <canvas id="ctmcChart" width="800" height="400" style="display:none;"></canvas>
+            </section>
+        </div>
+    </section>
+
+    <!-- JS -->
+    <script src="js/table.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/mathrender.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/fileIO.js"></script>
+    <script src="js/notifier.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>

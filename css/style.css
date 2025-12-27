@@ -1,0 +1,166 @@
+/* =========================================================
+   ОСНОВНІ СТИЛІ СТОРІНКИ
+========================================================= */
+
+/* Загальні стилі для всього документа */
+body {
+    font-family: Arial, sans-serif;   /* Основний шрифт */
+    margin: 20px;                     /* Відступи від країв сторінки */
+    background-color: #f9f9f9;        /* Світлий фон сторінки */
+    color: #333;                      /* Основний колір тексту */
+}
+
+/* Заголовки */
+h3, h4 {
+    margin-bottom: 10px;              /* Відступ знизу */
+    color: #2c3e50;                   /* Темно-синій колір */
+}
+
+/* Підписи до полів введення */
+label {
+    display: block;                   /* Кожен label з нового рядка */
+    margin: 10px 0 5px;               /* Відступи зверху і знизу */
+}
+
+/* Поля введення чисел, повзунок та select */
+input[type="number"],
+input[type="range"],
+select {
+    margin-top: 5px;                  /* Відступ зверху */
+    padding: 5px 8px;                 /* Внутрішні відступи */
+    border: 1px solid #ccc;           /* Рамка */
+    border-radius: 4px;               /* Закруглені кути */
+    width: 150px;                     /* Стандартна ширина */
+}
+
+/* Повзунок точності */
+input[type="range"] {
+    width: 200px;                     /* Більша ширина для зручності */
+}
+
+/* Кнопки */
+button {
+    padding: 8px 15px;                /* Внутрішні відступи */
+    margin-top: 10px;                 /* Відступ зверху */
+    background-color: #3498db;        /* Синій фон */
+    color: #fff;                      /* Білий текст */
+    border: none;                     /* Без рамки */
+    border-radius: 5px;               /* Закруглені кути */
+    cursor: pointer;                  /* Курсор-рука */
+    font-size: 14px;
+}
+
+/* Кнопка при наведенні */
+button:hover {
+    background-color: #2980b9;        /* Темніший синій */
+}
+
+/* Приховане поле вибору файлу */
+#loadFileInput {
+    display: none;
+}
+
+/* Стилізована мітка для завантаження файлу */
+.file-label {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #2ecc71;        /* Зелений фон */
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Ефект при наведенні на кнопку завантаження */
+.file-label:hover {
+    background-color: #27ae60;
+}
+
+/* Контейнери з результатами */
+#tableContainer,
+#initialVectorContainer,
+#graphContainer,
+#intensityMatrix,
+#systemakolmogorova,
+#solutionContainer,
+#ctmcChart {
+    margin-top: 15px;                 /* Відступ зверху */
+    padding: 10px;                    /* Внутрішні відступи */
+    background: #fff;                 /* Білий фон */
+    border-radius: 6px;               /* Закруглені кути */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Тінь */
+}
+
+/* Значення точності (біля повзунка) */
+#precisionValue {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Групи параметрів */
+fieldset {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+/* Заголовок fieldset */
+legend {
+    font-weight: bold;
+}
+
+/* =========================================================
+   СТИЛІ ДЛЯ ТАБЛИЦІ
+========================================================= */
+
+/* Основна таблиця */
+table {
+    border-collapse: collapse;        /* Прибираємо подвійні рамки */
+    margin-top: 10px;
+}
+
+/* Комірки та заголовки таблиці */
+td, th {
+    border: 1px solid black;
+    padding: 6px 10px;
+    text-align: center;
+    white-space: nowrap;              /* Заборона переносу тексту */
+}
+
+/* Поля введення всередині таблиці */
+td input {
+    width: 80px;
+    text-align: center;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+/* Підсвітка активного рядка */
+.highlight-row {
+    background-color: #f0f8ff;
+}
+
+/* Підсвітка активного стовпця */
+.highlight-col {
+    background-color: #f0f8ff;
+}
+
+/* Активна комірка */
+.highlight-cell {
+    background-color: #d0eaff !important;
+    font-weight: bold;
+}
+
+/* =========================================================
+   СТИЛІ ДЛЯ ФОРМУЛ MathJax
+========================================================= */
+
+/* Збільшений розмір формул для кращої читабельності */
+#intensityMatrix,
+#systemakolmogorova,
+#solutionContainer {
+    font-size: 1.5em;                 /* +50% до стандартного розміру */
+    line-height: 1.4em;               /* Міжрядковий інтервал */
+}
