@@ -30,7 +30,8 @@ function buildDotGraph(matrix) {
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
             const value = matrix[i][j];
-            if (value !== 0) {
+            // Додовання ребер якщо вони не дорівнюють 0 і не діаганальні ребра
+            if (value !== 0 && i !== j) {
                 dot += `S${i} -> S${j} [label=<${value}>];\n`;
             }
         }
