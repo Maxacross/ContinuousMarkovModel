@@ -38,16 +38,26 @@ function calculateValues() {
     // ===== Перевірка матриці =====
     const check = validateTableValues(matrix);
     if (!check.valid) {
+        // тимчасово ховаємо результати і виводимо помилку
+        modelWorkspace.style.display = "none";
         notify({ message: check.message, type: "error" });
         return;
     }
 
+    // якщо всі перевірки пройдені — показуємо блок
+     modelWorkspace.style.display = "block";
+
     // ===== Перевірка вектора =====
     const checkVector = validateInitialVector(vector);
     if (!checkVector.valid) {
+        // тимчасово ховаємо результати і виводимо помилку
+        modelWorkspace.style.display = "none";
         notify({ message: checkVector.message, type: "error" });
         return;
     }
+
+    // якщо всі перевірки пройдені — показуємо блок
+     modelWorkspace.style.display = "block";
 
     // ===== Побудова графа =====
     const dot = buildDotGraph(matrix);
