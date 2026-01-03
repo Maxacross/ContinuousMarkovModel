@@ -73,7 +73,7 @@ function solveAndRenderKolmogorov(matrix, containerId = "solutionContainer", tit
 
     const n = matrix.length;
     const A = math.transpose(matrix);
-    A.push(Array(n).fill(1));
+    A.push(Array(n).fill(1)); // Умова нормування (сума p = 1)
     const b = Array(n).fill(0);
     b.push(1);
 
@@ -81,7 +81,17 @@ function solveAndRenderKolmogorov(matrix, containerId = "solutionContainer", tit
     try {
         const pinvA = math.pinv(A);
         solution = math.multiply(pinvA, b);
-        console.log(solution);
+
+        // --- ОЧИЩЕННЯ ВІД ПОХИБОК ПЛАВАЮЧОЇ КОМИ ---
+        const EPSILON = 1e-10;
+        solution = solution.map(val => {
+            let cleanVal = val;
+            if (Math.abs(val) < EPSILON) cleanVal = 0;      // Близько до 0 -> 0
+            if (Math.abs(val - 1) < EPSILON) cleanVal = 1;  // Близько до 1 -> 1
+            return cleanVal === 0 ? 0 : cleanVal;           // Прибираємо "мінус нуль"
+        });
+        // ------------------------------------------
+
     } catch (err) {
         notify({ message: "Не вдалося розв'язати систему Колмогорова.", type: "error" });
         console.error(err);
@@ -89,18 +99,21 @@ function solveAndRenderKolmogorov(matrix, containerId = "solutionContainer", tit
     }
 
     let latex = "\\begin{cases} ";
+    const precision = typeof getSliderValue === "function" ? getSliderValue() : 4;
+
     solution.forEach((val, i) => {
-    const frac = math.fraction(val);
+        // Створюємо дріб з очищеного значення (округлюємо до 10 знаків для стабільності math.fraction)
+        const roundedForFrac = Math.round(val * 1e10) / 1e10;
+        const frac = math.fraction(roundedForFrac);
 
-    // якщо знаменник = 1, показуємо ціле число
-    const fracLatex = (frac.d === 1)
-        ? `${frac.n}`
-        : `\\frac{${frac.n}}{${frac.d}}`;
+        const fracLatex = (frac.d === 1)
+            ? `${frac.n}`
+            : `\\frac{${frac.n}}{${frac.d}}`;
 
-    latex += `p_{${i}} = ${Number(val).toFixed(getSliderValue())} = ${fracLatex} \\\\`;
+        // Виводимо: p_i = 0.XXXX = чисельник/знаменник
+        latex += `p_{${i}} = ${val.toFixed(precision)} = ${fracLatex} \\\\`;
     });
     latex += " \\end{cases}";
-
 
     const container = document.getElementById(containerId);
     const title = document.getElementById(titleId);
@@ -111,5 +124,5 @@ function solveAndRenderKolmogorov(matrix, containerId = "solutionContainer", tit
     container.innerHTML = `\\[ ${latex} \\]`;
 
     MathJax.typesetPromise([container])
-        .catch(err => notify({ message: `Помилка MathJax: ${err.message}`, type: "error" }));
+        .catch(err => console.error(`MathJax Error: ${err.message}`));
 }
