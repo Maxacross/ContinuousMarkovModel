@@ -81,6 +81,7 @@ function solveAndRenderKolmogorov(matrix, containerId = "solutionContainer", tit
     try {
         const pinvA = math.pinv(A);
         solution = math.multiply(pinvA, b);
+        console.log(solution);
     } catch (err) {
         notify({ message: "Не вдалося розв'язати систему Колмогорова.", type: "error" });
         console.error(err);
@@ -89,10 +90,17 @@ function solveAndRenderKolmogorov(matrix, containerId = "solutionContainer", tit
 
     let latex = "\\begin{cases} ";
     solution.forEach((val, i) => {
-        const frac = math.fraction(val);
-        latex += `p_{${i}} = ${Number(val).toFixed(getSliderValue())} = \\frac{${frac.n}}{${frac.d}} \\\\`;
+    const frac = math.fraction(val);
+
+    // якщо знаменник = 1, показуємо ціле число
+    const fracLatex = (frac.d === 1)
+        ? `${frac.n}`
+        : `\\frac{${frac.n}}{${frac.d}}`;
+
+    latex += `p_{${i}} = ${Number(val).toFixed(getSliderValue())} = ${fracLatex} \\\\`;
     });
     latex += " \\end{cases}";
+
 
     const container = document.getElementById(containerId);
     const title = document.getElementById(titleId);
