@@ -19,7 +19,7 @@ function buildDotGraph(matrix) {
     // Початок опису графа
     let dot = "digraph G {\n" +
               "rankdir=LR;\n" +           // Орієнтація зліва направо
-              "node [shape=circle];\n";   // Вузли у вигляді кіл
+              "node [shape=circle, fixedsize=true];\n";   // Вузли у вигляді кіл та однаковий розмір
 
     // Оголошення вершин
     for (let i = 0; i < size; i++) {
