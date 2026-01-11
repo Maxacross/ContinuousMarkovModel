@@ -77,6 +77,6 @@ resources/example_model.json
 ## 👤 Автор
 
 **Maxacross**  
-2025
+2026
 
 ---
