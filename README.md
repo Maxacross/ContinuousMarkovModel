@@ -33,24 +33,28 @@
 
 ## 📁 Структура проєкту
 
-/
-├── index.html  
-├── css/  
-│ └── style.css  
-├── js/  
-│ ├── table.js  
-│ ├── validation.js  
-│ ├── graph.js  
-│ ├── mathrender.js  
-│ ├── chart.js  
-│ ├── fileIO.js  
-│ ├── notifier.js  
-│ └── main.js  
-├── resources/  
-│ └── example_model.json  
-├── README.md  
-├── LICENSE  
-└── .gitignore  
+```text
+.
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── chart.js
+│   ├── fileIO.js
+│   ├── graph.js
+│   ├── main.js
+│   ├── mathrender.js
+│   ├── notifier.js
+│   ├── table.js
+│   └── validation.js
+├── resources/
+│   ├── example_model.json
+│   └── favicon.png
+├── .gitattributes
+├── .gitignore
+├── LICENSE
+└── README.md
+```
 
 ---
 
@@ -74,3 +78,5 @@ resources/example_model.json
 
 **Maxacross**  
 2025
+
+---
